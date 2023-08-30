@@ -1,0 +1,79 @@
+.like-homePage {
+  display: flex;
+  flex-direction: column;
+}
+.item-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+.like-button .heart-icon {
+  height: 73px;
+  width: 73px;
+  margin-bottom: 10px;
+  background-size: cover;
+  background-image: url('./heartblacksmall.png');
+  background-blend-mode: red;
+  cursor: pointer;
+  position: absolute;
+}
+
+.like-button .liked {
+  animation: like-anim 0.7s steps(28) forwards;
+  margin-top: -2px;
+}
+
+@keyframes like-anim {
+  to {
+    background-position: right;
+  }
+}
+.like-button {
+  flex-direction: column;
+}
+.like-button .heart-bg {
+  background: transparent;
+  height: 60px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 100ms ease;
+}
+
+.like-button .heart-bg:hover {
+  background: transparent;
+}
+
+.like-button {
+  display: flex;
+  align-items: center;
+}
+.likes-count {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+//  detial
+.icon-likeDetail {
+  display: flex;
+  button {
+    width: 37px;
+    height: 37px;
+    border-radius: 50%;
+  }
+  .heart-icon {
+    height: 56px;
+    width: 56px;
+    margin-bottom: 22px;
+  }
+  .liked {
+    margin-top: 1px;
+  }
+  strong {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+  }
+}

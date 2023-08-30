@@ -1,0 +1,86 @@
+.wrapper {
+  font-family: 'font-family: TikTokFont, Arial, Tahoma, PingFangSC, sans-serif', sans-serif;
+  min-width: 100px;
+  padding: 9px 16px;
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 21px;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: var(--white);
+  border: 1px solid transparent;
+  + .wrapper {
+    margin-left: 8px;
+    text-align: center;
+  }
+  &.disable {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+}
+.primary {
+  color: var(--white);
+  background-color: var(--primary);
+
+  &:hover {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06)), #fe2c55;
+  }
+}
+.outline {
+  color: var(--primary);
+  border-color: var(--primary);
+
+  &:hover {
+    background-color: rgba(254, 44, 85, 0.06);
+  }
+}
+.onlyIcon {
+  min-width: 36px;
+  background-color: transparent;
+  border: 1px solid rgba(22, 24, 35, 0.12);
+  padding: 10px 5px;
+  line-height: 0;
+  &:hover {
+    background-color: rgba(22, 24, 35, 0.03);
+  }
+  svg {
+    margin-left: 5px;
+    font-size: 18px;
+  }
+}
+.nonBG {
+  background-color: transparent;
+  border: 1px solid rgba(22, 24, 35, 0.12);
+  &:hover {
+    background-color: rgba(22, 24, 35, 0.03);
+  }
+}
+
+a {
+  display: inline-block;
+}
+svg {
+  display: inline-block;
+  margin-right: 5px;
+  text-align: center;
+}
+//font size button
+.small {
+  min-width: 88px;
+  padding: 4px 16px;
+}
+.large {
+  min-height: 48px;
+  min-width: 120px;
+}
+.border {
+  border: 1px solid rgba(22, 24, 35, 0.12);
+  &:hover {
+    background-color: rgba(22, 24, 35, 0.03);
+  }
+}
+
+.long {
+  min-width: 200px;
+  min-height: 48px;
+}

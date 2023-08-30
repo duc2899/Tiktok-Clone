@@ -1,0 +1,87 @@
+.wrapper-bg {
+  align-items: center;
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  position: fixed;
+  z-index: 9999999999999;
+  font-family: var(--font-family);
+}
+.overlay {
+  animation: overlay 0.5s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
+  background-color: rgba(0, 0, 0, 0.5);
+  inset: inherit;
+  opacity: 0;
+  position: absolute;
+}
+
+.block-modal {
+  animation: block 0.5s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
+  background-color: var(--white);
+  min-width: 310px;
+  position: absolute;
+  min-height: 240px;
+  overflow: hidden auto;
+  border-radius: 8px;
+  opacity: 0;
+}
+.block-logout {
+  min-width: 374px;
+  min-height: 197px;
+}
+.body-modal {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 28px;
+  max-width: 310px;
+  padding: 28px 24px;
+  text-align: center;
+}
+.body-modal-logout {
+  max-width: 368px;
+}
+.block-btn {
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+}
+.block-btn-logout {
+  text-align: center;
+  height: 75px;
+}
+
+.btn-accept {
+  font-weight: 600;
+  border-top: 1px solid rgba(22, 24, 35, 0.12);
+  border-bottom: 1px solid rgba(22, 24, 35, 0.12);
+}
+.btn-cancel {
+  opacity: 0.4;
+}
+.btn-accept,
+.btn-cancel {
+  cursor: pointer;
+  min-height: 48px;
+  background: none;
+}
+@keyframes overlay {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes block {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0.6);
+    transform: scale(0.6);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}

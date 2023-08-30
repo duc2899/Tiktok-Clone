@@ -1,0 +1,107 @@
+.siderbar {
+  flex-shrink: 0;
+  width: 263px;
+}
+.wrapper {
+  width: inherit;
+}
+.inner {
+  max-height: 625px;
+  overflow-y: hidden;
+  width: inherit;
+  position: fixed;
+  padding-left: 11px;
+  &:hover {
+    overflow-y: scroll;
+    transition: all overflow-y 0.3s linear;
+  }
+  &::-webkit-scrollbar {
+    border-radius: 0;
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    transition: all 0.8s ease-out;
+    border-radius: 4px;
+    background-color: rgba(27, 28, 35, 0.078);
+  }
+}
+.see {
+  font-size: 1.4rem;
+  padding: 0px 2px;
+  color: var(--primary);
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.block-offline {
+  border-top: 1px solid rgba(22, 24, 35, 0.12);
+  padding: 20px 0px;
+  .content {
+    color: rgba(95, 96, 99, 0.5);
+    font-size: 16px;
+    line-height: 21px;
+    letter-spacing: 0.03px;
+    width: 200px;
+    margin-bottom: 10px;
+  }
+}
+.footer-sidebar {
+  padding-top: 20px;
+  border-top: 1px solid rgba(22, 24, 35, 0.12);
+  .btn-createEff {
+    padding-right: 8px;
+    height: 50px;
+    text-align: center;
+    position: relative;
+    margin-bottom: 30px;
+    width: 208px;
+    height: 50px;
+    &:hover .content-btn {
+      transform: scale(1.05);
+      transition: all 0.3s linear;
+    }
+    a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        height: 52px;
+        border-radius: 8px;
+        max-width: 100%;
+      }
+      .content-btn {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+  .link-container {
+    width: 212px;
+    margin: 10px 0px;
+    a {
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 16px;
+      letter-spacing: 0.161px;
+      display: inline-block;
+      margin-right: 6px;
+      margin-top: 5px;
+      color: rgba(22, 24, 35, 0.5);
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  .create-year {
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.161px;
+    display: inline-block;
+    margin-right: 6px;
+    margin-top: 5px;
+    color: rgba(22, 24, 35, 0.5);
+  }
+}

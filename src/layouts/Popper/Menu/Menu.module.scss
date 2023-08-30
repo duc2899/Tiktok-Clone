@@ -1,0 +1,58 @@
+//more items
+.menu-list {
+  width: 224px;
+  .mennu-item {
+    width: 100%;
+    margin-left: 0;
+    &:hover {
+      background: rgba(22, 24, 35, 0.03);
+    }
+    &.cross {
+      border-top: 1px solid rgba(22, 24, 35, 0.12);
+    }
+  }
+}
+
+// menu-items
+.mennu-item {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.menu-body {
+  overflow-y: auto;
+}
+.menu-more {
+  overflow-y: hidden;
+}
+.expand {
+  display: flex;
+  justify-content: center;
+}
+//Header
+.header {
+  height: 50px;
+  position: relative;
+  margin-top: -8px;
+  flex-shrink: 0;
+}
+.back-btn {
+  width: 50px;
+  height: 100%;
+  background-color: transparent;
+  cursor: pointer;
+}
+.title-header {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// space icon
+.space-icon {
+  svg {
+    margin-right: 10px;
+  }
+}

@@ -1,0 +1,48 @@
+.wrapper {
+  z-index: 99;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  height: var(--default-layout-height);
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.12);
+  padding: 0px 24px 0px 16px;
+  background-color: var(--white);
+}
+.inner {
+  width: var(--default-layout-width);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}
+.acion-messages,
+.acion-inbox {
+  font-size: 23px;
+  background-color: transparent;
+  margin-left: 30px;
+  cursor: pointer;
+}
+
+.more-btn {
+  font-size: 2rem;
+  margin: 0 16px;
+  background: transparent;
+  cursor: pointer;
+  padding: 10px;
+}
+.user-avatar {
+  cursor: pointer;
+  margin-left: 30px;
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 50%;
+}

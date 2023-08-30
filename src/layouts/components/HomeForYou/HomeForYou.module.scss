@@ -1,0 +1,109 @@
+.list-items {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 40px 0px;
+}
+.avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.item {
+  position: relative;
+  display: flex;
+  gap: 0px 15px;
+  width: 600px;
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -20px;
+    width: 129%;
+    height: 1px;
+    -webkit-transform: scaleY(0.5);
+    -moz-transform: scaleY(0.5);
+    -ms-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+    background: #16182333;
+  }
+  .infor {
+    width: fit-content;
+  }
+  .infor a {
+    display: flex;
+    align-items: center;
+    gap: 0px 3px;
+    .nickname {
+      font-weight: 400;
+      font-size: 1.4rem;
+      color: rgba(51, 51, 51, 0.687);
+    }
+  }
+  .des {
+    max-width: 540px;
+  }
+  .link-music {
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  .main-item-header {
+    width: 600px;
+  }
+  .main-item-body {
+    display: flex;
+    gap: 0px 15px;
+
+    .list-btn-acitons {
+      margin-bottom: 4px;
+      align-self: end;
+      display: flex;
+      flex-direction: column;
+      gap: 5px 0px;
+
+      .item-btn {
+        background-color: transparent;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 6px 0px;
+        cursor: pointer;
+        span {
+          display: flex;
+          -webkit-box-pack: center;
+          justify-content: center;
+          -webkit-box-align: center;
+          align-items: center;
+          width: 4.8rem;
+          height: 4.8rem;
+          font-size: 0px;
+          border-radius: 50%;
+          transition: all 200ms ease-in-out 0s;
+          background-color: rgba(22, 24, 35, 0.06);
+        }
+        svg {
+          width: 2rem;
+          height: 2rem;
+          padding-left: 6px;
+        }
+        strong {
+          color: rgba(22, 24, 35, 0.75);
+          font-size: 1.4rem;
+        }
+      }
+    }
+  }
+}
+.avatar-link {
+  height: 56px;
+}
+.heart {
+  svg {
+    color: red;
+    transition: all 0.3s linear;
+  }
+}

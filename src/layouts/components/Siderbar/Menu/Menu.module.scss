@@ -1,0 +1,27 @@
+.menu-item {
+  display: flex;
+  align-items: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  padding: 9px;
+
+  .icon {
+    display: flex;
+  }
+
+  &.active {
+    color: var(--primary);
+    .icon {
+      display: none;
+    }
+    .icon-active {
+      display: flex;
+    }
+  }
+  &:hover {
+    background: rgba(22, 24, 35, 0.03);
+  }
+}
+.icon-active {
+  display: none;
+}
