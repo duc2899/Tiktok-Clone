@@ -28,7 +28,7 @@ import { faBan, faHeartCrack } from '@fortawesome/free-solid-svg-icons';
 import { faApple } from '@fortawesome/free-brands-svg-icons';
 import Login from '~/layouts/Modal/Login';
 import SignUp from '~/layouts/Modal/SignUp';
-
+import BtnSwitchTheme from '~/layouts/components/Header/BtnSwitchTheme';
 export const MENU_ITEMS = [
   {
     icon: <Language />,
@@ -59,6 +59,7 @@ export const MENU_ITEMS = [
   {
     icon: <ChangeMode />,
     title: 'Dark mode',
+    btn: <BtnSwitchTheme />,
   },
 ];
 
@@ -190,11 +191,13 @@ export const LOGIN_OPTIONS = [
     id: 1,
     icon: <IconQRCode />,
     title: 'Use QR code',
+    disable: true,
   },
   {
     id: 2,
     icon: <IconUser />,
     title: 'Use phone / email / username',
+    disable: false,
     children: {
       title: 'Login',
       data: <Login />,
@@ -204,36 +207,43 @@ export const LOGIN_OPTIONS = [
     id: 3,
     icon: <IconFb width="20" height="20" />,
     title: 'Continue with Facebook',
+    disable: true,
   },
   {
     id: 4,
     icon: <IconGoogle />,
     title: 'Continue with Google',
+    disable: true,
   },
   {
     id: 5,
     icon: <IconTwitter width="20" height="20" />,
     title: 'Continue with Twitter',
+    disable: true,
   },
   {
     id: 6,
     icon: <IconLine width="20" height="20" />,
     title: 'Continue with LINE',
+    disable: true,
   },
   {
     id: 7,
     icon: <IconKacaoTalk />,
     title: 'Continue with KakaoTalk',
+    disable: true,
   },
   {
     id: 8,
     icon: <FontAwesomeIcon icon={faApple} style={{ height: 20, width: 20 }} />,
     title: 'Continue with Apple',
+    disable: true,
   },
   {
     id: 9,
     icon: <IconInstagram />,
     title: 'Continue with Instagram',
+    disable: true,
   },
 ];
 export const SIGNUP_OPTIONS = [
@@ -241,6 +251,7 @@ export const SIGNUP_OPTIONS = [
     id: 1,
     icon: <IconUser />,
     title: 'Use phone or email',
+    disable: false,
     children: {
       title: 'Sign up',
       data: <SignUp />,
@@ -250,26 +261,31 @@ export const SIGNUP_OPTIONS = [
     id: 2,
     icon: <IconFb width="20" height="20" />,
     title: 'Continue with Facebook',
+    disable: true,
   },
   {
     id: 3,
     icon: <IconGoogle />,
     title: 'Continue with Google',
+    disable: true,
   },
   {
     id: 4,
     icon: <IconTwitter width="20" height="20" />,
     title: 'Continue with Twitter',
+    disable: true,
   },
   {
     id: 5,
     icon: <IconLine width="20" height="20" />,
     title: 'Continue with LINE',
+    disable: true,
   },
   {
     id: 6,
     icon: <IconKacaoTalk />,
     title: 'Continue with KakaoTalk',
+    disable: true,
   },
 ];
 export const MENU_LOGIN_SIGNUP = [

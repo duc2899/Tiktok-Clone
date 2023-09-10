@@ -1,0 +1,48 @@
+.switch-container {
+  margin-left: 30px;
+  box-sizing: border-box;
+  position: relative;
+  width: 44px;
+  height: 24px;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 999px;
+  input {
+    appearance: none;
+    box-sizing: border-box;
+    position: absolute;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    -webkit-box-align: center;
+    align-items: center;
+    background-color: rgba(22, 24, 35, 0.12);
+    cursor: pointer;
+    margin: 0px;
+    transition: background-color 0.2s linear;
+  }
+  input:checked {
+    background-color: rgba(11, 224, 155, 1);
+  }
+  .dot {
+    box-sizing: border-box;
+    height: 20px;
+    width: 20px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    transition: transform 0.2s ease 0s;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 2px;
+    pointer-events: none;
+    transform: translateX(2px);
+  }
+  .checked {
+    transform: translateX(22px);
+  }
+}

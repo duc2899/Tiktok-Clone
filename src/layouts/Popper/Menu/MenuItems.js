@@ -10,7 +10,7 @@ function MenuItems({ data, onClick }) {
     cross: data.cross,
   });
   return (
-    <Button className={classes} leftICon={data.icon} to={data.to} onClick={onClick}>
+    <Button className={classes} leftICon={data.icon} to={data.to} onClick={onClick} rightBtn={data.btn}>
       {data.title}
     </Button>
   );

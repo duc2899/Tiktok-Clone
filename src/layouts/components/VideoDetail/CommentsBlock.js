@@ -16,7 +16,7 @@ import Toast from '~/component/Toast';
 
 const cx = classNames.bind(sytles);
 
-function CommentBlock({ dataComments, countComments, idCreator, editComment }) {
+function CommentBlock({ allowComment, dataComments, countComments, idCreator, editComment }) {
   const [data, setData] = useState([]);
   // console.log(data);
   const providerDataSelf = useContext(StatusAcc);
@@ -24,6 +24,7 @@ function CommentBlock({ dataComments, countComments, idCreator, editComment }) {
   const [confirm, setConfirm] = useState(false);
   const [idComment, setIdComment] = useState(0);
   const [showToast, setShowToast] = useState(false);
+
   if (showToast) {
     setTimeout(() => {
       setShowToast(false);
@@ -81,53 +82,64 @@ function CommentBlock({ dataComments, countComments, idCreator, editComment }) {
   const toastView = () =>
     createPortal(<Toast text="Deleted" visible={showToast}></Toast>, document.getElementById('protal'));
   return (
-    <div className={cx('block')}>
-      {data.length > 0 ? (
-        data.map((item, i) => (
-          <div className={cx('comment-item')} key={i}>
-            <AccountItem data={item.user}>
-              <Link to={`/@${item.user.nickname}`} className={cx('avatar')} style={{ height: 'fit-content' }}>
-                <Image src={item.user.avatar}></Image>
-              </Link>
-            </AccountItem>
-            <div className={cx('comment-body')}>
+    <div
+      onLoadStart={() => <div>Loading....</div>}
+      onLoadedData={() => <div>Loadding success</div>}
+      className={cx('block')}
+    >
+      {allowComment ? (
+        data.length > 0 ? (
+          data.map((item, i) => (
+            <div className={cx('comment-item')} key={i}>
               <AccountItem data={item.user}>
-                <div style={{ display: 'flex' }}>
-                  <Link to={`/@${item.user.nickname}`} className={cx('user-name')}>
-                    <strong>{handelNameNull(item.user.first_name, item.user.last_name)}</strong>
-                  </Link>
-                  · {idCreator === item.user.id && <strong className={cx('text-creator')}>Creator</strong>}
-                </div>
+                <Link to={`/@${item.user.nickname}`} className={cx('avatar')} style={{ height: 'fit-content' }}>
+                  <Image src={item.user.avatar}></Image>
+                </Link>
               </AccountItem>
-              <p className={cx('comeent-content')}>{item.comment}</p>
-              <p className={cx('others')}>
-                <span className={'created_at'}>{handelTextCreated(item)}</span>
-                <span className={cx('reply-comment')}>Reply</span>
-              </p>
+              <div className={cx('comment-body')}>
+                <AccountItem data={item.user}>
+                  <div style={{ display: 'flex' }}>
+                    <Link to={`/@${item.user.nickname}`} className={cx('user-name')}>
+                      <strong>{handelNameNull(item.user.first_name, item.user.last_name)}</strong>
+                    </Link>
+                    · {idCreator === item.user.id && <strong className={cx('text-creator')}>Creator</strong>}
+                  </div>
+                </AccountItem>
+                <p className={cx('comment-content')}>{item.comment}</p>
+                <p className={cx('others')}>
+                  <span className={'created_at'}>{handelTextCreated(item)}</span>
+                  <span className={cx('reply-comment')}>Reply</span>
+                </p>
+              </div>
+              <div className={cx('comment-like')}>
+                <Menu
+                  items={item.user.id === providerDataSelf.data.id ? MENU_COMMENT_SELF : MENU_COMMENT}
+                  data={item.id}
+                  onChange={handelDeleteComment}
+                >
+                  <div className={cx('more-icon')}>
+                    <ThreeDots></ThreeDots>
+                  </div>
+                </Menu>
+                <ButtonLikeComment item={item} className={cx('btn-like')}></ButtonLikeComment>
+              </div>
             </div>
-            <div className={cx('comment-like')}>
-              <Menu
-                items={item.user.id === providerDataSelf.data.id ? MENU_COMMENT_SELF : MENU_COMMENT}
-                data={item.id}
-                onChange={handelDeleteComment}
-              >
-                <div className={cx('more-icon')}>
-                  <ThreeDots></ThreeDots>
-                </div>
-              </Menu>
-              <ButtonLikeComment item={item} className={cx('btn-like')}></ButtonLikeComment>
-            </div>
-          </div>
-        ))
+          ))
+        ) : (
+          <div className={cx('empty-comments')}>Be the first to comment!</div>
+        )
       ) : (
-        <div className={cx('empty-comments')}>Be the first to comment!</div>
+        <div className={cx('empty-comments')}>Comments are turned off</div>
       )}
       {openModal && (
         <ConfirmModal
           openModal={openModal}
           closeModal={setOpenModal}
           confirmModal={setConfirm}
-          isDeleteComment
+          form_first
+          contentBody={'Are you sure you want to delete this comment?'}
+          contentBtnLeft={'Cancel'}
+          contentBtnRight={'Delete'}
         ></ConfirmModal>
       )}
       {toastView()}

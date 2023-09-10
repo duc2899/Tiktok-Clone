@@ -39,13 +39,15 @@
   flex: 1;
   margin-left: 10px;
 }
-.username {
+.light .username {
   font-size: 1.6rem;
   color: #161823;
   font-weight: 900;
   margin-right: 5px;
 }
-
+.dark .username {
+  color: #fff;
+}
 .nickname {
   color: rgba(22, 24, 35, 0.75);
   font-weight: 400;

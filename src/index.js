@@ -8,6 +8,7 @@ import { StatusAccount } from './component/StatusAccount';
 import { DataVideoLike } from './component/Provider/DataVideoLike';
 import { DataUserFollow } from './component/Provider/DataUserFollow';
 import { StoreVideos } from './component/Provider/StoreVideo';
+import ThemeProvider from './component/Provider/Theme';
 import Protal from './Protal';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -17,8 +18,10 @@ root.render(
         <VolumeProvider>
           <DataVideoLike>
             <DataUserFollow>
-              <App />
-              <Protal />
+              <ThemeProvider>
+                <App />
+                <Protal />
+              </ThemeProvider>
             </DataUserFollow>
           </DataVideoLike>
         </VolumeProvider>

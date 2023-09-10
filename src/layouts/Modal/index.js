@@ -30,7 +30,7 @@ function Modal({ open, onClose }) {
             };
 
             return (
-              <div key={option.id} className={cx('option')} onClick={handelMenu}>
+              <div key={option.id} className={cx('option', `${option.disable && 'notAllow'}`)} onClick={handelMenu}>
                 <span className={cx('icon-option')}>{option.icon}</span>
                 <span className={cx('title-option')}>{option.title}</span>
               </div>

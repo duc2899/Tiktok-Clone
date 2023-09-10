@@ -37,11 +37,20 @@
   padding: 28px 24px;
   text-align: center;
 }
+.body-modal-des {
+  margin-top: 8px;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 18px;
+  word-break: break-word;
+  text-align: center;
+  color: rgba(22, 24, 35, 0.5);
+}
 .body-modal-logout {
   max-width: 368px;
 }
 .block-btn {
-  height: 100px;
+  height: 128px;
   display: flex;
   flex-direction: column;
   justify-content: end;
@@ -58,6 +67,21 @@
 }
 .btn-cancel {
   opacity: 0.4;
+  border-top: 1px solid rgba(22, 24, 35, 0.29);
+}
+.block-btn {
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+.styeAnother {
+  opacity: 1.4;
+  font-size: 15px;
+  color: var(--primary);
+  font-weight: 600;
+  border-top: 1px solid rgb(22 24 35 / 8%);
 }
 .btn-accept,
 .btn-cancel {

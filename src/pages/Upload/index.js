@@ -1,5 +1,6 @@
+import UploadLayout from '~/layouts/Upload';
 function Upload() {
-  return <h1>Upload</h1>;
+  return <UploadLayout></UploadLayout>;
 }
 
 export default Upload;

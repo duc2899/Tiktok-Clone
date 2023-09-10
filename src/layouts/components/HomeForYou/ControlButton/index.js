@@ -32,7 +32,7 @@ function ControlButton({ item }) {
         <span>
           <IconFavourite />
         </span>
-        <strong className={cx('favourites-count')}>11</strong>
+        <strong className={cx('favourites-count')}>0</strong>
       </button>
       <Menu items={SHARE_MENU} spaceIcon expand="active" customPlaceMent="top" customOffset={[80, 240]}>
         <button className={cx('item-btn')}>

@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/alt-text */
 import { useEffect, useState, useContext } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Sidebar.module.scss';
@@ -88,8 +90,9 @@ function Siderbar() {
           {isLogin ? (
             <>
               <AccountSideBar label={'Following accounts'} data={dataFollowing}></AccountSideBar>
-              <>
-                {checkMaxDataFollowing.length !== 0 ? (
+
+              {checkMaxDataFollowing.length > 0 ? (
+                checkMaxDataFollowing.length !== 0 ? (
                   <p className={cx('see')} onClick={() => setSeeMoreFollowing(seeMoreFollowing + 1)}>
                     See more
                   </p>
@@ -97,8 +100,10 @@ function Siderbar() {
                   <p className={cx('see')} onClick={handelSeeLessFollowing}>
                     See less
                   </p>
-                )}
-              </>
+                )
+              ) : (
+                <p className={cx('none-following')}>Accounts you follow will appear here</p>
+              )}
             </>
           ) : (
             <div className={cx('block-offline')}>

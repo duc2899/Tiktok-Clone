@@ -3,19 +3,22 @@ import { StatusAcc } from '~/component/StatusAccount';
 import { useContext, useEffect, useState } from 'react';
 import Modal from '~/layouts/Modal';
 import * as followUserService from '~/component/Services/followUserService';
-
 import { DataUserFollowNew } from '~/component/Provider/DataUserFollow';
 
-function ButtonFollow({ dataUser }) {
-  // console.log(dataUser.is_followed);
-
+function ButtonFollow({ dataUser, className, long = false, primary = false }) {
   const providerFollowUser = useContext(DataUserFollowNew);
 
   const [isOpen, setIsOpen] = useState(false);
   const providerStatusAcc = useContext(StatusAcc);
   const [isFollow, setFollow] = useState(false);
   const [actionFollow, setActionFollow] = useState({});
-
+  const [showToast, setShowToast] = useState(false);
+  if (showToast) {
+    setTimeout(() => {
+      setShowToast(false);
+      window.location.reload();
+    }, 3000);
+  }
   useEffect(() => {
     setFollow(dataUser.is_followed);
   }, [dataUser.is_followed]);
@@ -57,11 +60,11 @@ function ButtonFollow({ dataUser }) {
     <>
       {providerStatusAcc.isLogin ? (
         isFollow ? (
-          <Button nonBG small onClick={handelUnFollow}>
+          <Button nonBG small onClick={handelUnFollow} className={className}>
             Following
           </Button>
         ) : (
-          <Button outline small onClick={handelFollowUser}>
+          <Button outline small onClick={handelFollowUser} className={className}>
             Follow
           </Button>
         )

@@ -1,5 +1,5 @@
-function Header() {
-  return <h2>Header</h2>;
+import Header from '~/layouts/components/Header/Header';
+function HeaderOnly() {
+  return <Header></Header>;
 }
-
-export default Header;
+export default HeaderOnly;

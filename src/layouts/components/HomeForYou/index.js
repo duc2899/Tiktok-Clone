@@ -20,7 +20,7 @@ import Modal from '~/layouts/Modal';
 import ControlButton from './ControlButton';
 import { DataUserFollowNew } from '~/component/Provider/DataUserFollow';
 import { DataVideosArray } from '~/component/Provider/StoreVideo';
-
+import FollowingLogout from '../FollowingLogOut';
 const cx = classNames.bind(sytles);
 
 function HomeForYou({ randomPage = false, typeOfPage }) {
@@ -71,7 +71,6 @@ function HomeForYou({ randomPage = false, typeOfPage }) {
       const result = await userService.forYou(page, typePage);
       setPage((prevPage) => prevPage + 1);
       setData((prevItems) => [...prevItems, ...result]);
-
       providerVideos.setVideo((prevItems) => [...prevItems, ...result]);
     } catch (err) {
       console.log(err);
@@ -101,74 +100,88 @@ function HomeForYou({ randomPage = false, typeOfPage }) {
         hasMore={true}
         style={{ height: '', overflow: 'hidden' }}
       >
-        <div className={cx('list-items')}>
-          {data.map((item) => (
-            <div className={cx('item', 'videoHome')} key={item.id}>
-              <Link to={`/@${item.user.nickname}`} target="_blank" className={cx('avatar-link')}>
-                <div className={cx('block-avatar')}>
-                  <AccountItem data={item.user}>
-                    <Image src={item.user.avatar} alt="" className={cx('avatar')} />
-                  </AccountItem>
-                </div>
-              </Link>
+        {data.length <= 0 && typeOfPage == 'following' ? (
+          <FollowingLogout isLogin={isLogin}></FollowingLogout>
+        ) : (
+          <div className={cx('list-items')}>
+            {data.map((item) => (
+              <div className={cx('item', 'videoHome')} key={item.id}>
+                <Link to={`/@${item.user.nickname}`} target="_blank" className={cx('avatar-link')}>
+                  <div className={cx('block-avatar')}>
+                    <AccountItem data={item.user}>
+                      <Image src={item.user.avatar} alt="" className={cx('avatar')} />
+                    </AccountItem>
+                  </div>
+                </Link>
+                <div className={cx('main-item')}>
+                  <div className={cx('main-item-header')}>
+                    <AccountItem data={item.user}>
+                      <div className={cx('infor')}>
+                        <Link to={`/@${item.user.nickname}`}>
+                          <h3 className={cx('username')}>
+                            {handelNameNull(item.user.first_name, item.user.last_name)}
+                          </h3>
+                          {item.user.tick && <FontAwesomeIcon icon={faCheckCircle} className={cx('icon-check')} />}
+                          <h4 className={cx('nickname')}>{item.user.nickname}</h4>
+                        </Link>
+                      </div>
+                    </AccountItem>
 
-              <div className={cx('main-item')}>
-                <div className={cx('main-item-header')}>
-                  <AccountItem data={item.user}>
-                    <div className={cx('infor')}>
-                      <Link to={`/@${item.user.nickname}`}>
-                        <h3 className={cx('username')}>{handelNameNull(item.user.first_name, item.user.last_name)}</h3>
-                        {item.user.tick && <FontAwesomeIcon icon={faCheckCircle} className={cx('icon-check')} />}
-                        <h4 className={cx('nickname')}>{item.user.nickname}</h4>
-                      </Link>
-                    </div>
-                  </AccountItem>
-                  <div className={cx('des')}>{item.description}</div>
-                  <div className={cx('link-music')}>♫ {handelLinkMusic(item.music, item.user.nickname)}</div>
-                </div>
-                <div className={cx('main-item-body')}>
-                  <ControlVideo data={item} dataVideoFull={data} />
-                  {isLogin === false ? (
-                    <div className={cx('list-btn-acitons')}>
-                      <button className={cx('item-btn')} onClick={() => setIsOpen(true)}>
-                        <span>
-                          <IconHeart />
-                        </span>
-                        <strong className={cx('likes-count')}>{item.likes_count}</strong>
-                      </button>
-                      <button className={cx('item-btn')} onClick={() => setIsOpen(true)}>
-                        <span>
-                          <IconMessage />
-                        </span>
-                        <strong className={cx('comments-count')}>{item.comments_count}</strong>
-                      </button>
-                      <button className={cx('item-btn')} onClick={() => setIsOpen(true)}>
-                        <span>
-                          <IconFavourite />
-                        </span>
-                        <strong className={cx('favourites-count')}>11</strong>
-                      </button>
-                      <Menu items={SHARE_MENU} spaceIcon expand="active" customPlaceMent="top" customOffset={[80, 240]}>
+                    <div className={cx('des')}>{item.description}</div>
+                    <div className={cx('link-music')}>♫ {handelLinkMusic(item.music, item.user.nickname)}</div>
+                  </div>
+                  <div className={cx('main-item-body')}>
+                    <ControlVideo data={item} typeOfPage={typeOfPage} />
+                    {isLogin === false ? (
+                      <div className={cx('list-btn-acitons')}>
                         <button className={cx('item-btn')} onClick={() => setIsOpen(true)}>
                           <span>
-                            <IconShare />
+                            <IconHeart />
                           </span>
-                          <strong className={cx('shares-count')}>{item.shares_count}</strong>
+                          <strong className={cx('likes-count')}>{item.likes_count}</strong>
                         </button>
-                      </Menu>
-                    </div>
-                  ) : (
-                    <ControlButton item={item}></ControlButton>
-                  )}
+                        <button className={cx('item-btn')} onClick={() => setIsOpen(true)}>
+                          <span>
+                            <IconMessage />
+                          </span>
+                          <strong className={cx('comments-count')}>{item.comments_count}</strong>
+                        </button>
+                        <button className={cx('item-btn')} onClick={() => setIsOpen(true)}>
+                          <span>
+                            <IconFavourite />
+                          </span>
+                          <strong className={cx('favourites-count')}>0</strong>
+                        </button>
+                        <Menu
+                          items={SHARE_MENU}
+                          spaceIcon
+                          expand="active"
+                          customPlaceMent="top"
+                          customOffset={[80, 240]}
+                        >
+                          <button className={cx('item-btn')} onClick={() => setIsOpen(true)}>
+                            <span>
+                              <IconShare />
+                            </span>
+                            <strong className={cx('shares-count')}>{item.shares_count}</strong>
+                          </button>
+                        </Menu>
+                      </div>
+                    ) : (
+                      <ControlButton item={item}></ControlButton>
+                    )}
+                  </div>
                 </div>
-              </div>
 
-              <div className={cx('btn-follow')}>
-                <ButtonFollow dataUser={item.user !== undefined && item.user}></ButtonFollow>
+                {getIsLogin.data.id !== item.user.id && (
+                  <div className={cx('btn-follow')}>
+                    <ButtonFollow dataUser={item.user !== undefined && item.user}></ButtonFollow>
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </InfiniteScroll>
       <Modal open={isOpen} onClose={() => setIsOpen(false)}></Modal>
     </div>

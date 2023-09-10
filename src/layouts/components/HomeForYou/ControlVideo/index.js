@@ -15,7 +15,7 @@ import { MENU_VIDEO_ANOTHER } from '~/component/StoreMenu';
 const cx = classNames.bind(styles);
 const VideoDetail = lazy(() => import('../../VideoDetail'));
 
-function ControlVideo({ data, dataVideoFull }) {
+function ControlVideo({ data, typeOfPage }) {
   // console.log(data);
 
   const videoRef = useRef(null);
@@ -72,13 +72,13 @@ function ControlVideo({ data, dataVideoFull }) {
       window.history.replaceState(
         `${window.location.origin + `/videoDetail/${data.id}`}`,
         'Sample Title',
-        `${window.location.origin}`,
+        `${window.location.origin + `/${typeOfPage == 'for-you' ? '' : typeOfPage}`}`,
       );
     } else {
       window.history.replaceState(
         `${window.location.origin}`,
         'Sample Title',
-        `${window.location.origin + `/videoDetail/${data.id}`}`,
+        `${window.location.origin + `/${typeOfPage == 'for-you' ? '' : typeOfPage}`}`,
       );
 
       videoRef.current.pause();
@@ -159,7 +159,7 @@ function ControlVideo({ data, dataVideoFull }) {
         </Menu>
         {openDetailVideo && (
           <ErrorBoundary>
-            <VideoDetail videoId={data} onExitDetail={setOpenDetailVideo}></VideoDetail>
+            <VideoDetail video={data} onExitDetail={setOpenDetailVideo}></VideoDetail>
           </ErrorBoundary>
         )}
       </div>

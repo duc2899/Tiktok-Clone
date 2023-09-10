@@ -21,6 +21,7 @@ function Button({
   leftICon,
   children,
   className,
+  rightBtn,
   ...passProps
 }) {
   let Comp = 'button';
@@ -63,6 +64,7 @@ function Button({
     <Comp className={classes} {...props}>
       {leftICon}
       {children}
+      {rightBtn}
     </Comp>
   );
 }

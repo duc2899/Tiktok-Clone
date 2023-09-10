@@ -1,12 +1,9 @@
 import { lazy, React, Suspense } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ErrorBoundary } from 'react-error-boundary';
-import SkeletonAdmin from '~/layouts/Skeletion/SkeletonAdmin';
+import SkeletonFollowing from '~/layouts/Skeletion/SkeletonFollowing';
 const HomeForYou = lazy(() => import('~/layouts/components/HomeForYou'));
 function Home() {
-  // const navigator = useNavigate();
   return (
-    <Suspense fallback={<SkeletonAdmin></SkeletonAdmin>}>
+    <Suspense fallback={<SkeletonFollowing></SkeletonFollowing>}>
       <HomeForYou randomPage={true} typeOfPage={'for-you'} />
     </Suspense>
   );

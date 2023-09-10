@@ -8,14 +8,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import Image from '~/component/Images/Images';
 import Modal from '~/layouts/Modal';
+import ButtonFollow from '../HomeForYou/ControlButton/ButtonFollow';
 
 const cx = classNames.bind(style);
 
-function FollowingLogout() {
+function FollowingLogout({ isLogin }) {
   const videoRef = useRef();
   const [data, setData] = useState([]);
-  const [activeVideo, setActiveVideo] = useState(false);
-  const [startPlayVideo, setStartPlayVideo] = useState(false);
+
   const [openModal, setOpenModal] = useState(false);
   const [videoID, setVideoID] = useState();
   const videos = document.querySelectorAll('video');
@@ -31,10 +31,6 @@ function FollowingLogout() {
       }
     });
   }, [videoID]);
-
-  const handelLoadVideo = () => {
-    setStartPlayVideo(true);
-  };
 
   const fetchApi = async () => {
     const result = await suggestedService.suggestedAcc(1, 18);
@@ -54,8 +50,7 @@ function FollowingLogout() {
                 <video
                   videoid={item.id}
                   ref={videoRef}
-                  onLoadStart={handelLoadVideo}
-                  className={cx(`${activeVideo && 'active-Video'}`)}
+                  className={cx('active-Video')}
                   src={item.popular_video.file_url}
                   loop
                   muted
@@ -73,9 +68,13 @@ function FollowingLogout() {
               </div>
             </div>
           </Link>
-          <Button small long primary className={cx('btn-follow')} onClick={() => setOpenModal(true)}>
-            Follow
-          </Button>
+          {!isLogin ? (
+            <Button small long primary className={cx('btn-follow')} onClick={() => setOpenModal(true)}>
+              Follow
+            </Button>
+          ) : (
+            <ButtonFollow dataUser={item} long primary className={cx('btn-follow')}></ButtonFollow>
+          )}
         </div>
       ))}
       <Modal open={openModal} onClose={() => setOpenModal(false)}></Modal>

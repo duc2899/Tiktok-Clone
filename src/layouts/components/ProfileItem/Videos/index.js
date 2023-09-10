@@ -8,7 +8,26 @@ const cx = classNames.bind(sytles);
 
 function Videos({ data }) {
   const [openDetailVideo, setOpenDetailVideo] = useState(false);
+  useEffect(() => {
+    if (!openDetailVideo) {
+      setOpenDetailVideo(false);
+      document.body.classList.remove('active');
+      window.history.replaceState(
+        `${window.location.href + `/videoDetail/${data.id}`}`,
+        'Sample Title',
+        `${window.location.origin + `/@${data.user.nickname}`}`,
+      );
+    } else {
+      window.history.replaceState(
+        `${window.location.href}`,
+        'Sample Title',
+        `${window.location.href + `/videoDetail/${data.id}`}`,
+      );
 
+      document.body.classList.add('active');
+      setOpenDetailVideo(true);
+    }
+  }, [openDetailVideo]);
   return (
     <div className={cx('wrapper')}>
       <HoverVideoPlayer
@@ -38,7 +57,7 @@ function Videos({ data }) {
           <span>{data.description}</span>
         </div>
       </a>
-      {openDetailVideo && <VideoDetail videoId={data} onExitDetail={setOpenDetailVideo} isScroll={false}></VideoDetail>}
+      {openDetailVideo && <VideoDetail video={data} onExitDetail={setOpenDetailVideo} isScroll={false}></VideoDetail>}
     </div>
   );
 }

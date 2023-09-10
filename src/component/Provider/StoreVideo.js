@@ -4,7 +4,6 @@ const DataVideosArray = createContext();
 function StoreVideos({ children }) {
   const [video, setVideo] = useState([]);
   const arrayID = [];
-  // console.log(video);
 
   video.forEach((element) => {
     arrayID.push(element.id);

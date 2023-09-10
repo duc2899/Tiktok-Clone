@@ -2,23 +2,24 @@ import classNames from 'classnames/bind';
 import sytles from './VideoDetail.module.scss';
 import { createPortal } from 'react-dom';
 import Image from '~/component/Images/Images';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import AccountItem from '~/component/AccountSideBar/AccountItem';
 import { useEffect, useState, useRef, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faChevronDown, faChevronUp, faEllipsis, faLock } from '@fortawesome/free-solid-svg-icons';
 import { IconMusic, IconShare, IconMessage, IconEmoji } from '~/component/Icons';
+import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
+
 import { SHARE_MENU_1 } from '~/component/StoreMenu';
 import { SHARE_MENU_2 } from '~/component/StoreMenu';
 import Menu from '~/layouts/Popper/Menu/Menu';
 import ClipboardCopy from './ClipboardCopy ';
 import * as getCommentsService from '~/component/Services/getCommentsService';
 import CommentBlock from './CommentsBlock';
-
 import MenuEmoji from './MenuEmoji';
-
 import * as postCommentService from '~/component/Services/postCommentService';
+import * as deleteVideoService from '~/component/Services/deleteVideoService';
 import ButtonLike from '../HomeForYou/ControlButton/ButtonLike';
 import ButtonFollow from '../HomeForYou/ControlButton/ButtonFollow';
 import { StatusAcc } from '~/component/StatusAccount';
@@ -26,14 +27,26 @@ import Modal from '~/layouts/Modal';
 import BlockVideo from './BlockVideo';
 import Toast from '~/component/Toast';
 import { DataVideosArray } from '~/component/Provider/StoreVideo';
+import ConfirmModal from '~/component/ConfirmModal';
+import PrivacySettings from './PrivacySettings';
 
 const cx = classNames.bind(sytles);
 
-function VideoDetail({ videoId, onExitDetail, isScroll = true }) {
-  const contextVideos = useContext(DataVideosArray);
+function VideoDetail({ video, onExitDetail, isScroll = true }) {
+  const OPTION_VIDEO = [
+    {
+      icon: <FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>,
+      title: 'Delete',
+    },
+    {
+      icon: <FontAwesomeIcon icon={faLock}></FontAwesomeIcon>,
+      title: 'Privacy settings',
+    },
+  ];
 
-  // console.log(videos);
-  const [videoID, setVideoID] = useState([videoId.id]);
+  const contextVideos = useContext(DataVideosArray);
+  const [videoID, setVideoID] = useState([video.id]);
+  const [allowComment, setAllowComment] = useState(video.allows.includes('comment'));
   const providerStatusAcc = useContext(StatusAcc);
 
   const [dataComment, setDataComment] = useState([]);
@@ -45,9 +58,13 @@ function VideoDetail({ videoId, onExitDetail, isScroll = true }) {
   const textareaRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
   const [contentToast, setContentToast] = useState('');
-  const [positionVideo, setPositionVideo] = useState(contextVideos.arrayID.indexOf(videoId.id));
-  const [dataVideo, setDataVideo] = useState(videoId);
+  const [positionVideo, setPositionVideo] = useState(contextVideos.arrayID.indexOf(video.id));
+  const [dataVideo, setDataVideo] = useState(video);
   const [showToast, setShowToast] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [confirm, setConfirm] = useState(false);
+  const [openPrivacySetting, setOpenPrivacySetting] = useState(false);
+  const [showToastPrivacy, setShowToastPrivacy] = useState(false);
 
   useEffect(() => {
     if (isScroll) {
@@ -55,8 +72,13 @@ function VideoDetail({ videoId, onExitDetail, isScroll = true }) {
       videos[positionVideo].scrollIntoView();
     }
     setDataVideo(contextVideos.video[positionVideo]);
+    setAllowComment(contextVideos.video[positionVideo].allows.includes('comment'));
     setVideoID(contextVideos.arrayID[positionVideo]);
   }, [positionVideo, isScroll]);
+
+  useEffect(() => {
+    setAllowComment(dataVideo.allows.includes('comment'));
+  }, [dataVideo.allows]);
 
   if (showToast) {
     setTimeout(() => {
@@ -104,15 +126,17 @@ function VideoDetail({ videoId, onExitDetail, isScroll = true }) {
     }
   };
   useEffect(() => {
-    const fetchApi = async () => {
-      try {
-        const result = await getCommentsService.getComments(1, videoID);
-        setDataComment(result.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchApi();
+    if (videoID !== undefined) {
+      const fetchApi = async () => {
+        try {
+          const result = await getCommentsService.getComments(1, videoID, JSON.parse(localStorage.getItem('token')));
+          setDataComment(result.data);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      fetchApi();
+    }
   }, [videoID]);
 
   const handelKeyDownPost = (e, countText) => {
@@ -161,11 +185,41 @@ function VideoDetail({ videoId, onExitDetail, isScroll = true }) {
   }
   useEffect(() => {
     window.history.replaceState(
-      `${window.location.origin}`,
+      `${window.location.href}`,
       'Sample Title',
       `${window.location.origin + `/videoDetail/${videoID}`}`,
     );
   }, [videoID]);
+  useEffect(() => {
+    if (confirm) {
+      setOpenModal(false);
+      const fetchApi = async () => {
+        try {
+          await deleteVideoService.deleteVideo(dataVideo.id, JSON.parse(localStorage.getItem('token')));
+          window.location = window.location.origin + `/@${dataVideo.user.nickname}`;
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      fetchApi();
+    }
+  }, [confirm]);
+
+  const handelChangeOption = (value) => {
+    if (value === 'Delete') {
+      setOpenModal(true);
+    } else if (value === 'Privacy settings') {
+      setOpenPrivacySetting(true);
+    }
+  };
+
+  useEffect(() => {
+    if (showToastPrivacy) {
+      setShowToast(true);
+      setContentToast('Updated privacy video successfully');
+    }
+  }, [showToastPrivacy]);
+
   return createPortal(
     <div className={cx('wrapper')}>
       <div style={{ position: 'relative', flex: '1' }}>
@@ -201,7 +255,15 @@ function VideoDetail({ videoId, onExitDetail, isScroll = true }) {
                 </Link>
               </AccountItem>
             </div>
-            <ButtonFollow dataUser={dataVideo.user}></ButtonFollow>
+            {providerStatusAcc.data.id !== dataVideo.user.id ? (
+              <ButtonFollow dataUser={dataVideo.user}></ButtonFollow>
+            ) : (
+              <Menu items={OPTION_VIDEO} onChange={(item) => handelChangeOption(item.title)}>
+                <div>
+                  <FontAwesomeIcon icon={faEllipsis} style={{ fontSize: '20px', cursor: 'pointer' }}></FontAwesomeIcon>
+                </div>
+              </Menu>
+            )}
           </div>
           <div className={cx('des')}>
             <p className={cx('text-des')}>{dataVideo.description}</p>
@@ -224,7 +286,7 @@ function VideoDetail({ videoId, onExitDetail, isScroll = true }) {
               <div className={cx('share-list')}>
                 <div className={cx('menu-show')}>
                   {SHARE_MENU_1.map((item, i) => (
-                    <Tippy placement="top" content={item.title} zIndex={999999999} key={i}>
+                    <Tippy placement="top" content={item.title} zIndex={999999999} key={i} animation="scale">
                       <a href="helo">{item.icon}</a>
                     </Tippy>
                   ))}
@@ -242,6 +304,7 @@ function VideoDetail({ videoId, onExitDetail, isScroll = true }) {
         <div className={cx('block-comments')}>
           {
             <CommentBlock
+              allowComment={allowComment}
               dataComments={dataComment}
               countComments={callbackFunction}
               idCreator={dataVideo.user.id}
@@ -251,37 +314,39 @@ function VideoDetail({ videoId, onExitDetail, isScroll = true }) {
         </div>
         <footer className={cx('block-inputComments')}>
           {providerStatusAcc.isLogin ? (
-            <div className={cx('comment-wrapper')}>
-              <div className={cx('input-container')}>
-                <textarea
-                  id="test"
-                  value={countText <= 150 && inputVal}
-                  ref={textareaRef}
-                  onChange={handleInputChange}
-                  rows={1}
-                  spellCheck="false"
-                  placeholder="Add comment..."
-                  onKeyUp={(e) => handelKeyDownPost(e, countText)}
-                  onKeyDown={(e) => handelNewLine(e)}
-                ></textarea>
-                {countText > 50 && (
-                  <p className={cx('count-text', `${countText >= 150 ? 'limit' : ''}`)}>{countText + '/' + 150}</p>
-                )}
-                <MenuEmoji dataEmoji={getDataEmoji}>
-                  <Tippy content="Click to add emojis" placement="top" zIndex={999999999999999} offset={[0, 25]}>
-                    <div style={{ marginLeft: 372 }}>
-                      <IconEmoji className={cx('icon-emoji')}></IconEmoji>
-                    </div>
-                  </Tippy>
-                </MenuEmoji>
+            allowComment && (
+              <div className={cx('comment-wrapper')}>
+                <div className={cx('input-container')}>
+                  <textarea
+                    id="test"
+                    value={countText <= 150 && inputVal}
+                    ref={textareaRef}
+                    onChange={handleInputChange}
+                    rows={1}
+                    spellCheck="false"
+                    placeholder="Add comment..."
+                    onKeyUp={(e) => handelKeyDownPost(e, countText)}
+                    onKeyDown={(e) => handelNewLine(e)}
+                  ></textarea>
+                  {countText > 50 && (
+                    <p className={cx('count-text', `${countText >= 150 ? 'limit' : ''}`)}>{countText + '/' + 150}</p>
+                  )}
+                  <MenuEmoji dataEmoji={getDataEmoji}>
+                    <Tippy content="Click to add emojis" placement="top" zIndex={999999999999999} offset={[0, 25]}>
+                      <div style={{ marginLeft: 372 }}>
+                        <IconEmoji className={cx('icon-emoji')}></IconEmoji>
+                      </div>
+                    </Tippy>
+                  </MenuEmoji>
+                </div>
+                <button
+                  className={cx('submit-comment', `${countText > 0 ? 'active-btn' : ''}`)}
+                  onClick={() => countText > 0 && setPost(true)}
+                >
+                  Post
+                </button>
               </div>
-              <button
-                className={cx('submit-comment', `${countText > 0 ? 'active-btn' : ''}`)}
-                onClick={() => countText > 0 && setPost(true)}
-              >
-                Post
-              </button>
-            </div>
+            )
           ) : (
             <div className={cx('comment-wrapper')} onClick={() => setIsOpen(true)}>
               <p className={cx('notifi-comment')}>Login to comment</p>
@@ -291,6 +356,23 @@ function VideoDetail({ videoId, onExitDetail, isScroll = true }) {
       </div>
       <Modal open={isOpen} onClose={() => setIsOpen(false)}></Modal>
       {toastView(contentToast)}
+      <ConfirmModal
+        openModal={openModal}
+        closeModal={setOpenModal}
+        confirmModal={setConfirm}
+        contentBody={'Are you sure you want to delete this video?'}
+        contentBtnLeft={'Cancel'}
+        contentBtnRight={'Delete'}
+        form_first
+      ></ConfirmModal>
+      {openPrivacySetting && (
+        <PrivacySettings
+          data={dataVideo}
+          setOpenSetting={setOpenPrivacySetting}
+          setShowToast={setShowToastPrivacy}
+          setDataVideo={setDataVideo}
+        ></PrivacySettings>
+      )}
     </div>,
 
     document.getElementById('protal'),

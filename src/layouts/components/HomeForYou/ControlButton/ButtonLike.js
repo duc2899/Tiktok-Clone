@@ -6,6 +6,7 @@ import sytle from './ButtonLike.module.scss';
 import { StatusAcc } from '~/component/StatusAccount';
 import Modal from '~/layouts/Modal';
 import { DataVideoNew } from '~/component/Provider/DataVideoLike';
+import { DataVideosArray } from '~/component/Provider/StoreVideo';
 
 const cx = classNames.bind(sytle);
 
@@ -14,7 +15,7 @@ function ButtonLike({ item, className, Icon = <IconHeart /> }) {
   const [countTym, setCountTym] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const providerStatusAcc = useContext(StatusAcc);
-  const providerVideoLike = useContext(DataVideoNew);
+  const providerDataArray = useContext(DataVideosArray);
   useEffect(() => {
     setIsTym(item.is_liked);
   }, [item.is_liked]);
@@ -30,7 +31,14 @@ function ButtonLike({ item, className, Icon = <IconHeart /> }) {
           JSON.parse(localStorage.getItem('token')),
           action,
         );
-        providerVideoLike.setVideo(result);
+        const arrayNew = providerDataArray.video.map((video) => {
+          if (video.id === item.id) {
+            video.is_liked = result.is_liked;
+            video.likes_count = result.likes_count;
+          }
+          return video;
+        });
+        providerDataArray.setVideo(arrayNew);
       } catch (err) {
         console.log(err);
       }

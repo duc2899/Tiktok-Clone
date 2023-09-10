@@ -86,6 +86,7 @@ function Menu({
       placement={customPlaceMent}
       render={renderResult}
       onHide={handelBackFirstMenu}
+      arrow={true}
     >
       {children}
     </Tippy>

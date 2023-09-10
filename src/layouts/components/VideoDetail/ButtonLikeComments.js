@@ -9,6 +9,11 @@ import Modal from '~/layouts/Modal';
 const cx = classNames.bind(sytles);
 
 function ButtonLikeComment({ item, className }) {
+  // const [item, setItem] = useState(dataComment);
+  useEffect(() => {
+    setIsTym(item.is_liked);
+    setCountTym(item.likes_count);
+  }, [item.is_liked, item.likes_count]);
   const [isTym, setIsTym] = useState(item.is_liked);
   const [countTym, setCountTym] = useState(item.likes_count);
   const [isOpen, setIsOpen] = useState(false);
@@ -22,6 +27,8 @@ function ButtonLikeComment({ item, className }) {
           JSON.parse(localStorage.getItem('token')),
           action,
         );
+        setIsTym(result.is_liked);
+        setCountTym(result.likes_count);
       } catch (err) {
         console.log(err);
       }
@@ -30,12 +37,9 @@ function ButtonLikeComment({ item, className }) {
   }
   const handleTym = () => {
     if (providerStatusAcc.isLogin) {
-      setIsTym(!isTym);
       if (isTym === false) {
-        setCountTym(countTym + 1);
         actionVideo('like');
       } else {
-        setCountTym(countTym - 1);
         actionVideo('unlike');
       }
     } else {
@@ -44,7 +48,7 @@ function ButtonLikeComment({ item, className }) {
   };
   return (
     <>
-      <button className={cx('btn-like', `${className}`)} onClick={() => handleTym()}>
+      <button key={item.id} className={cx('btn-like', `${className}`)} onClick={() => handleTym()}>
         <span className={cx(`${isTym && 'heart'}`)}>
           <IconHearNoBG></IconHearNoBG>
         </span>

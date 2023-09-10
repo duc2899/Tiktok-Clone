@@ -1,22 +1,21 @@
-import VideoDetail from '~/layouts/components/VideoDetail';
-import ConfirmModal from '~/component/ConfirmModal';
-import { useState, useContext } from 'react';
-import HomeForYou from '~/layouts/components/HomeForYou';
+import { lazy, useContext } from 'react';
 import { StatusAcc } from '~/component/StatusAccount';
-import SkeletonAdmin from '~/layouts/Skeletion/SkeletonAdmin';
 import { Suspense } from 'react';
-import { useLocation, useNavigation } from 'react-router-dom';
-import FollowingLogout from '~/layouts/components/FollowingLogOut';
+import SkeletonFollowing from '~/layouts/Skeletion/SkeletonFollowing';
+
+const HomeForYou = lazy(() => import('~/layouts/components/HomeForYou'));
+const FollowingLogout = lazy(() => import('~/layouts/components/FollowingLogOut'));
 function Following() {
   const getIsLogin = useContext(StatusAcc);
-  const isLogin = getIsLogin.isLogin;
 
-  return isLogin ? (
-    <Suspense fallback={<SkeletonAdmin></SkeletonAdmin>}>
+  return getIsLogin.isLogin ? (
+    <Suspense fallback={<SkeletonFollowing></SkeletonFollowing>}>
       <HomeForYou randomPage={false} typeOfPage={'following'}></HomeForYou>
     </Suspense>
   ) : (
-    <FollowingLogout></FollowingLogout>
+    <Suspense fallback={<SkeletonFollowing></SkeletonFollowing>}>
+      <FollowingLogout isLogin={getIsLogin.isLogin}></FollowingLogout>
+    </Suspense>
   );
 }
 

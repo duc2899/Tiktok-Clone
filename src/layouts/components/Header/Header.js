@@ -46,12 +46,12 @@ function Header() {
     {
       icon: <User />,
       title: 'View profile',
-      to: `/@ ${data.nickname}`,
+      to: `/@${data.nickname}`,
     },
     {
       icon: <Favorites />,
       title: 'Favorites',
-      to: `/@ ${data.nickname}`,
+      to: `/@${data.nickname}`,
     },
     {
       icon: <Coins />,
@@ -128,7 +128,10 @@ function Header() {
           openModal={openModal}
           closeModal={setOpenModal}
           confirmModal={setIsLogout}
-          isLogout
+          form_twice
+          contentBody={'Are you sure you want to log out?'}
+          contentBtnLeft={'Cancel'}
+          contentBtnRight={'Log out'}
         ></ConfirmModal>
       )}
     </header>

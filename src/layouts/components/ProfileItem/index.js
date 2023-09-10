@@ -1,16 +1,16 @@
 import { json, useLocation } from 'react-router-dom';
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, lazy } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import classNames from 'classnames/bind';
+import { Suspense } from 'react';
 
 import sytles from './Profile.module.scss';
 import Image from '~/component/Images/Images';
 import Button from '~/component/Button/Button';
 import * as userService from '~/component/Services/userService';
-import Videos from './Videos';
 import Liked from './Liked';
 import Menu from '../../Popper/Menu/Menu';
 import { SHARE_MENU, ANOTHER_MENU } from '~/component/StoreMenu';
@@ -21,55 +21,36 @@ import EditProfile from '../EditProfile';
 import { DataUserFollowNew } from '~/component/Provider/DataUserFollow';
 import * as followUserService from '~/component/Services/followUserService';
 import { DataVideosArray } from '~/component/Provider/StoreVideo';
-
+import SkeletonProfile from '~/layouts/Skeletion/SkeletionProfile';
+const Videos = lazy(() => import('./Videos'));
 const cx = classNames.bind(sytles);
 
 function ProfileItem() {
   const contextVideos = useContext(DataVideosArray);
-
   const getIsLogin = useContext(StatusAcc);
-  const isLogin = getIsLogin.isLogin;
 
+  const dataMyself = getIsLogin.data;
   const [isOpen, setIsOpen] = useState(false);
-
   const [isOpenEdit, setIsOpenEdit] = useState(false);
-
   let location = useLocation();
-
-  const [checkAcc, setCheckAcc] = useState(false);
-
   const [data, setData] = useState({});
-
   const [currentTab, setCurrentTab] = useState(1);
-
   const [actionFollow, setActionFollow] = useState({});
-
   const [isFollow, setFollow] = useState(false);
-
   useEffect(() => {
     if (location.pathname !== undefined) {
-      if (location.pathname.includes('@%20')) {
-        const resultString = location.pathname.replace('%20', '');
-        const fetchApi = async () => {
-          const result = await userService.user(resultString, JSON.parse(localStorage.getItem('token')));
-          setCheckAcc(true);
-          setData(result);
-          contextVideos.setVideo([]);
+      const fetchApi = async () => {
+        const result = await userService.user(location.pathname, JSON.parse(localStorage.getItem('token')));
+        setData(result);
+        if (result.id === getIsLogin.data.id) {
           contextVideos.setVideo(result.videos);
-        };
-        fetchApi();
-      } else {
-        const fetchApi = async () => {
-          const result = await userService.user(location.pathname, JSON.parse(localStorage.getItem('token')));
-          setCheckAcc(false);
-          setData(result);
-          contextVideos.setVideo([]);
-          contextVideos.setVideo(result.videos);
-        };
-        fetchApi();
-      }
+        } else {
+          contextVideos.setVideo(result.videos.filter((item) => item.viewable !== 'private'));
+        }
+      };
+      fetchApi();
     }
-  }, [location.pathname]);
+  }, [location.pathname, getIsLogin.data]);
   const handelTab = (id) => {
     setCurrentTab(id);
   };
@@ -87,6 +68,13 @@ function ProfileItem() {
       id: data.id,
       action: 'follow',
     });
+  };
+  const handelNameNull = (first_name, last_name) => {
+    if (first_name === '' && last_name === '') {
+      return 'Unknown name';
+    } else {
+      return first_name + last_name;
+    }
   };
   const fetchApi = async (data) => {
     try {
@@ -120,12 +108,27 @@ function ProfileItem() {
       title: 'Videos',
       content:
         data.videos !== undefined && data.videos.length !== 0 ? (
-          data.videos.map((video) => <Videos key={video.id} data={video} />)
+          data.id === dataMyself.id ? (
+            data.videos.map((video) => (
+              <Suspense fallback={<SkeletonProfile></SkeletonProfile>}>
+                <Videos key={video.id} data={video} />
+              </Suspense>
+            ))
+          ) : (
+            data.videos.map(
+              (video) =>
+                video.viewable !== 'private' && (
+                  <Suspense fallback={<SkeletonProfile></SkeletonProfile>}>
+                    <Videos key={video.id} data={video} />
+                  </Suspense>
+                ),
+            )
+          )
         ) : (
           <div className={cx('wrapper-noneVideos')}>
             <div>
               <IconTabVideos />
-              {checkAcc ? (
+              {dataMyself.id === data.id ? (
                 <>
                   <p className={cx('p-1')}>Upload your first video</p>
                   <p className={cx('p-2')}>Your videos will appear here</p>
@@ -157,16 +160,33 @@ function ProfileItem() {
           <div className={cx('wrappSide')}>
             <div className={cx('userName')}>
               <h1>
-                {data.first_name + data.last_name}
+                {handelNameNull(data.first_name, data.last_name)}
                 {data.tick && <FontAwesomeIcon icon={faCheckCircle} />}
               </h1>
             </div>
             <div className={cx('nickname')}>{data.nickname}</div>
-            {isLogin === false ? (
-              <Button large long primary onClick={() => setIsOpen(true)}>
-                Follow
-              </Button>
-            ) : checkAcc === true ? (
+            {dataMyself.id !== data.id ? (
+              getIsLogin.isLogin === false ? (
+                <Button large long primary onClick={() => setIsOpen(true)}>
+                  Follow
+                </Button>
+              ) : isFollow === false ? (
+                <Button large primary className={cx('btn-follow')} onClick={handelFollow}>
+                  Follow
+                </Button>
+              ) : (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Button large outline className={cx('btn-follow')}>
+                    Message
+                  </Button>
+                  <Tippy content="Unfollow" placement="bottom">
+                    <button className={cx('btn-unfollow')} onClick={handelUnFollow}>
+                      <IconUnFollow></IconUnFollow>
+                    </button>
+                  </Tippy>
+                </div>
+              )
+            ) : (
               <Button
                 border
                 small
@@ -174,21 +194,6 @@ function ProfileItem() {
                 onClick={() => setIsOpenEdit(true)}
               >
                 Edit Profile
-              </Button>
-            ) : isFollow ? (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Button large outline className={cx('btn-follow')}>
-                  Message
-                </Button>
-                <Tippy content="Unfollow" placement="bottom">
-                  <button className={cx('btn-unfollow')} onClick={handelUnFollow}>
-                    <IconUnFollow></IconUnFollow>
-                  </button>
-                </Tippy>
-              </div>
-            ) : (
-              <Button large primary className={cx('btn-follow')} onClick={handelFollow}>
-                Follow
               </Button>
             )}
           </div>

@@ -17,5 +17,8 @@ export const remove = async (path, options = {}) => {
   const response = await httpRequest.delete(path, options);
   return response.data;
 };
-
+export const update = async (path, formdata, options = {}) => {
+  const response = await httpRequest.patch(path, formdata, options);
+  return response;
+};
 export default httpRequest;
