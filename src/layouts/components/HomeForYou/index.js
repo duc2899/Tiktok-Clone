@@ -98,7 +98,7 @@ function HomeForYou({ randomPage = false, typeOfPage }) {
         dataLength={data.length}
         next={randomPage ? fetchApiHome : fetchApiFollowing}
         hasMore={true}
-        style={{ height: '', overflow: 'hidden' }}
+        style={{ overflowY: 'hidden', paddingTop: '23px' }}
       >
         {data.length <= 0 && typeOfPage == 'following' ? (
           <FollowingLogout isLogin={isLogin}></FollowingLogout>
