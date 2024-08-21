@@ -6,7 +6,6 @@ const httpRequest = axios.create({
 
 export const get = async (path, formdata, options = {}) => {
   const response = await httpRequest.get(path, formdata, options);
-
   return response.data;
 };
 export const post = async (path, formdata, options = {}) => {
@@ -22,3 +21,4 @@ export const update = async (path, formdata, options = {}) => {
   return response;
 };
 export default httpRequest;
+  
